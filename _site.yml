@@ -1,0 +1,6 @@
+name: "my-website"
+navbar:
+  title: "Meghan Lee"
+left:
+  - text: "Home"
+href: index.html
