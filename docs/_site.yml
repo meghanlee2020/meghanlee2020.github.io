@@ -3,5 +3,10 @@ navbar:
   title: "Meghan Lee"
 left:
   - text: "Home"
+<<<<<<< HEAD
 href: "index.html"
 remote_theme: tufte-jekyll
+=======
+href: index.html
+theme: jekyll-theme-minimal
+>>>>>>> 736ed3edd60a2b7a5c2afef31188bc1cf0389f85
