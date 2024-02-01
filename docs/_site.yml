@@ -4,4 +4,4 @@ navbar:
 left:
   - text: "Home"
 href: "index.html"
-
+remote_theme: tufte-jekyll
