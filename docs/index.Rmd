@@ -1,6 +1,6 @@
 ---
 title: "Meghan Lee"
-output: tufte::tufte_html
+output: tufte::tufte_html 
 date: 
 ---
 
