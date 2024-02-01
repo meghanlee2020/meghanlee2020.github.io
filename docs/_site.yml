@@ -3,5 +3,5 @@ navbar:
   title: "Meghan Lee"
 left:
   - text: "Home"
-href: "index.html"
+href: index.html
 remote_theme: ET-Jekyll
