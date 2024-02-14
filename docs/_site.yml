@@ -4,7 +4,6 @@ navbar:
 left:
   - text: "Home"
 href: index.html
-href: http://github.com/<meghanlee2020>/
 output:
   html_document:
   theme: journal
