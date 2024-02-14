@@ -4,4 +4,7 @@ navbar:
 left:
   - text: "Home"
 href: index.html
-remote_theme: ET-Jekyll
+href: http://github.com/<meghanlee2020>/
+  output:
+  html_document:
+  theme: journal
