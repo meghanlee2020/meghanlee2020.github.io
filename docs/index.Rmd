@@ -1,19 +1,18 @@
 ---
 title: "Meghan Lee"
-output: tufte::tufte_html 
-date: 
 ---
 
-# Editor, producer and reporter
+Editor, producer and reporter
 
 Multimedia journalist with experience as a daily morning radio anchor at KBIA and an editor for Columbia's *Vox Magazine*.
 
-![](files/IMG_2357.jpg)
+![](files/IMG_E4372.JPG)
+
 
 # Resume
 
 
-## Experience  
+### Experience  
 **Managing Editor**  
 Vox Magazine  
 January 2024 - Present 
@@ -38,11 +37,11 @@ May 2022 - December 2022
 
 # Work Samples  
 
-## **Editing**
+### Editing
 
-[Heads in the clouds](https://www.voxmagazine.com/features/online/columbia-paramotoring-sport-gains-popularity/article_b98e68fc-53e6-11ee-8896-87a74482a143.html)
+[Meet the Columbia couple behind YouTube's Fundie Fridays](https://www.voxmagazine.com/news/fundie-fridays-youtube-duggar-documentary/article_3f273266-9b8e-11ee-ab78-13e0c1c8b16b.html)
 
-[Molto Pastificio](https://www.voxmagazine.com/food/molto-pastificio-pop-up-pasta-shop/article_a8a6ad1c-58fd-11ee-b2f7-6bbfaed3f521.html)
+[Getting into the weeds](https://www.voxmagazine.com/news/missouri-marijuana-cannabis-weed-regulations/article_badaf456-921f-11ee-a27a-278f0c7c2d80.html)
 
 [Meet Maude Adams](https://www.voxmagazine.com/arts/meet-maude-adams-broadway-stephens-college/article_633eaa1a-7809-11ee-b239-930b34aecf99.html)
 
@@ -50,9 +49,7 @@ May 2022 - December 2022
 
 [Molto Pastificio](https://www.voxmagazine.com/food/molto-pastificio-pop-up-pasta-shop/article_a8a6ad1c-58fd-11ee-b2f7-6bbfaed3f521.html)
 
-[Getting into the weeds](https://www.voxmagazine.com/news/missouri-marijuana-cannabis-weed-regulations/article_badaf456-921f-11ee-a27a-278f0c7c2d80.html)
-
-## **Reporting**
+### Reporting
 
 [Sean Frazier's world of fantasy](https://www.voxmagazine.com/arts/books/monsters-magic-fantasy-literature-mage-breaker-sean-frazier/article_d8c90918-d8a1-11ed-a02f-8319f2d8363e.html)
 
@@ -60,7 +57,7 @@ May 2022 - December 2022
 
 [Columbia City Council appoints five Citizens Police Review Board members](https://www.komu.com/news/midmissourinews/columbia-city-council-appoints-five-citizens-police-review-board-members/article_463aad60-4e89-11ed-b6ff-13e4e5b8833c.html)
 
-## **Anchoring**
+### Anchoring
 
 [KBIA Anchor Profile](https://www.kbia.org/people/meghan-lee)
 
