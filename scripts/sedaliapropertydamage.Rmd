@@ -1,0 +1,101 @@
+---
+title: "sedaliapropertydamage"
+output: html_document
+date: "2024-03-20"
+---
+load packages:
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(dbplyr)
+library(tidyr)
+```
+
+load data:
+
+```{r}
+sedaliapropertydamage <- read.csv("data/sedaliapropertydamageedited.csv")
+reportedincidents <- read.csv("data/reportedincidentssedalia.csv")
+```
+
+```{r}
+propertydamage2021 <- sedaliapropertydamage %>% 
+  filter(Year == "2021")
+
+propertydamage2022 <- sedaliapropertydamage %>% 
+  filter(Year == "2022")
+
+propertydamage2023 <- sedaliapropertydamage %>% 
+  filter(Year == "2023")
+
+propertydamage2024 <- sedaliapropertydamage %>% 
+  filter(Year == "2024")
+```
+
+```{r}
+propertydamage2021 %>% 
+mutate(propertytype = fct_reorder(propertytype, numberofincidences)) %>% 
+ggplot(aes(x=propertytype,y=numberofincidences)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+propertydamage2022 %>% 
+mutate(propertytype = fct_reorder(propertytype, numberofincidences)) %>% 
+ggplot(aes(x=propertytype,y=numberofincidences)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+propertydamage2023 %>% 
+mutate(propertytype = fct_reorder(propertytype, numberofincidences)) %>% 
+ggplot(aes(x=propertytype,y=numberofincidences)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+propertydamage2024 %>% 
+mutate(propertytype = fct_reorder(propertytype, numberofincidences)) %>% 
+ggplot(aes(x=propertytype,y=numberofincidences)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+```{r}
+reportedincidents %>% 
+  ggplot(aes(x=Year,y=numberofreportedincidences)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+```{r}
+structuredamage <- sedaliapropertydamage %>% 
+  filter(propertytype == "Structures")
+
+motorvehicledamage <- sedaliapropertydamage %>% 
+  filter(propertytype == "Motor Vehicle")
+```
+
+```{r}
+structuredamage %>% 
+ ggplot(aes(x=Year,y=numberofincidences)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+
+motorvehicledamage %>% 
+   ggplot(aes(x=Year,y=numberofincidences)) +
+  geom_col() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+```
+
+```{r}
+
+motorsandstructure <- sedaliapropertydamage %>%  c("Structures", "Motor Vehicle")
+
+structureandmotor <- filter(sedaliapropertydamage, propertytype %in% motorsandstructure)
+
+```
+
+```{r}
+structureandmotor %>% 
+ ggplot(aes(x=Year, y=numberofincidences, fill=propertytype)) +
+  geom_bar(stat='identity', position='dodge')
+```
+
