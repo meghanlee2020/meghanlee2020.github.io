@@ -6,4 +6,4 @@ left:
 href: index.html
 output:
   html_document:
-  theme: journal
+  theme: jekyll-theme-minimal
