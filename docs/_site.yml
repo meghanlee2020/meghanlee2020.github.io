@@ -6,4 +6,4 @@ left:
 href: index.html
 output:
   html_document:
-  theme: jekyll-theme-minimal
+  remote_theme: pages-themes/minimal@v0.2.0
