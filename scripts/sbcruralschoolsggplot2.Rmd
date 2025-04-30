@@ -1,0 +1,50 @@
+---
+title: "sbcggplotschools"
+output: html_document
+date: "2025-04-16"
+---
+
+Load packages: 
+```{r}
+library(sf)
+library(tidyverse)
+library(janitor)
+library(leaflet)
+library(mapview)
+library(raster)
+library(lubridate)
+library(tidycensus)
+```
+
+load data: 
+
+```{r}
+schools <- sbcschooldistrictfunding
+
+supervisorial_sf <- read_sf("data/Supervisorial_Boundaries.geojson")
+```
+
+make column with popdensity
+
+```{r}
+supervisorial_sf <- transform(supervisorial_sf, popdensity = POPULATION / AREA)
+```
+
+break down Reap, Title I, and None 
+
+```{r}
+REAP <- schools %>% filter(primaryfedfunding == "REAP")
+
+TitleI <- schools %>% filter(primaryfedfunding == "Title I")
+
+None <- schools %>%  filter(primaryfedfunding == "None")
+```
+
+attempt to map: 
+
+```{r}
+ggplot(data = supervisorial_sf) + geom_sf(aes(fill = popdensity), alpha = 1) +
+  geom_point(data = REAP, mapping = aes(x = Longitude, y = Latitude), colour = "red")
+
+```
+

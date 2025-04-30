@@ -1,0 +1,443 @@
+---
+title: "sbcfederalcontracts"
+output: html_document
+date: "2025-02-18"
+---
+
+load packages:
+
+```{r}
+library(tidyverse)
+library(dbplyr)
+library(tidyr)
+library(lubridate)
+library(ggplot2)
+library(readr)
+
+Assistance_PrimeAwardSummaries_2025_02_18_H12M03S23_1 <- read_csv("data/Assistance_PrimeAwardSummaries_2025-02-18_H12M03S23_1.csv")
+Contracts_PrimeAwardSummaries_2025_02_18_H11M57S06_1 <- read_csv("data/Contracts_PrimeAwardSummaries_2025-02-18_H11M57S06_1.csv")
+Contracts_Subawards_2025_02_18_H12M16S35_1 <- read_csv("data/Contracts_Subawards_2025-02-18_H12M16S35_1.csv")
+
+
+```
+
+
+load data:
+
+```{r}
+contractsubawards <- Contracts_Subawards_2025_02_18_H12M16S35_1
+contractprimeawards <- Contracts_PrimeAwardSummaries_2025_02_18_H11M57S06_1
+assistanceprimeawards <- Assistance_PrimeAwardSummaries_2025_02_18_H12M03S23_1
+assistancesubawards <- Assistance_Subawards_2025_02_18_H12M44S33_1
+```
+
+which contracts are ongoing? which have ended? 
+
+```{r}
+contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01')
+contractprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01')
+assistanceprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01')
+assistancesubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01')
+```
+
+
+vet data:
+
+is each instance unique?
+
+```{r}
+contractprimeawards %>%  count(contract_award_unique_key)
+contractsubawards %>% count(prime_award_unique_key)
+assistanceprimeawards %>% count(assistance_award_unique_key)
+assistancesubawards %>% count(prime_award_unique_key)
+```
+
+what are all the t involved?
+
+```{r}
+contractprimeawards %>%  count(awarding_sub_agency_code) %>% 
+  arrange(desc(n))
+
+contractsubawards %>%  count(prime_award_awarding_sub_agency_code) %>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>%  count(awarding_sub_agency_code) %>% 
+  arrange(desc(n))
+
+assistancesubawards %>%  count(prime_award_awarding_sub_agency_code) %>% 
+  arrange(desc(n))
+```
+
+n sums out to 1319
+
+What county are all of these from?
+
+```{r}
+contractprimeawards %>%  count(primary_place_of_performance_county_name)%>% 
+  arrange(desc(n))
+
+contractprimeawards %>%  count(primary_place_of_performance_city_name)%>% 
+  arrange(desc(n))
+
+contractsubawards %>%  count(prime_award_primary_place_of_performance_county_name)%>% 
+  arrange(desc(n))
+
+contractsubawards %>%  count(prime_award_primary_place_of_performance_city_name)%>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>%  count(primary_place_of_performance_county_name)%>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>%  count(primary_place_of_performance_city_name)%>% 
+  arrange(desc(n))
+
+assistancesubawards %>%  count(prime_award_primary_place_of_performance_county_name)%>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>%  count(primary_place_of_performance_city_name)%>% 
+  arrange(desc(n))
+
+```
+n is 1319 under primary place of performance county name
+n sums to 1319 under primary place of performance city name
+
+what years do the data represent?
+```{r}
+contractprimeawards %>%  count(award_base_action_date_fiscal_year) %>% 
+  arrange(desc(n))
+  
+contractprimeawards %>%  count(award_latest_action_date_fiscal_year) %>% 
+  arrange(desc(n))  
+
+contractsubawards %>% count(prime_award_latest_action_date_fiscal_year) %>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>%  count(award_latest_action_date_fiscal_year) %>% 
+  arrange(desc(n))
+
+assistancesubawards %>%  count(prime_award_latest_action_date_fiscal_year) %>% 
+  arrange(desc(n))
+```
+Earliest year the data represents is 2003, latest is 2025
+many contract stuff is very recent, same with assitance subawards  
+
+
+Who is getting the money?
+```{r}
+contractprimeawards %>%  count(recipient_name) %>% 
+  arrange(desc(n)) 
+```
+
+what kinds of awards are there?
+```{r}
+contractprimeawards %>%  count(award_type) %>% 
+  arrange(desc(n)) 
+```
+
+```{r}
+assistanceprimeawards %>% filter(awarding_sub_agency_code == "12D2")
+assistancesubawards %>% filter(prime_award_awarding_sub_agency_code == "12F2")
+assistancesubawards %>% filter(prime_award_awarding_sub_agency_code == "7590")
+assistancesubawards %>% filter(prime_award_awarding_sub_agency_code == "6802")
+assistancesubawards %>% count(subawardee_name) %>% 
+  arrange(desc(n))
+
+assistancesubawards[grep('75*', assistancesubawards$prime_award_awarding_sub_agency_code),]
+```
+
+```{r}
+
+assistancesubawards %>% count(prime_award_cfda_numbers_and_titles) %>% 
+  arrange(desc(n))
+
+```
+
+Grant programs to look at:
+93.994: MATERNAL AND CHILD HEALTH SERVICES BLOCK GRANT TO THE STATES
+93.568: LOW-INCOME HOME ENERGY ASSISTANCE	
+10.215: SUSTAINABLE AGRICULTURE RESEARCH AND EDUCATION	
+
+```{r}
+assistancesubawards %>% filter(prime_award_cfda_numbers_and_titles == "93.994: MATERNAL AND CHILD HEALTH SERVICES BLOCK GRANT TO THE STATES")
+
+assistancesubawards %>% filter(prime_award_cfda_numbers_and_titles == "93.568: LOW-INCOME HOME ENERGY ASSISTANCE")
+
+assistancesubawards %>% filter(prime_award_cfda_numbers_and_titles == "10.215: SUSTAINABLE AGRICULTURE RESEARCH AND EDUCATION")
+```
+
+how much has been awarded?
+```{r}
+assistancesubawards %>% summarise(sum(prime_award_amount))
+assistanceprimeawards %>% summarise(sum(total_funding_amount))
+contractprimeawards %>%  summarise(sum(total_obligated_amount))
+contractsubawards %>% summarise(sum(prime_award_amount, na.rm=T))
+```
+where is the money for current ongoing contracts going?
+
+```{r}
+assistancesubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>% 
+  count(subawardee_name) %>% 
+  arrange(desc(n))
+
+assistancesubawards %>% count(prime_award_funding_agency_name) %>% 
+  arrange(desc(n))
+
+assistancesubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>% 
+  count(prime_award_cfda_numbers_and_titles) %>% 
+  arrange(desc(n))
+
+assistancesubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>% 
+  summarise(sum(prime_award_amount))
+
+assistancesubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>% 
+  summarise(sum(prime_award_amount))
+```
+
+
+```{r}
+contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  count(subawardee_name) %>% 
+  arrange(desc(n))
+
+contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>% 
+  filter(subawardee_name == "PACIFIC SCIENTIFIC ENERGETIC MATERIALS COMPANY (CALIFORNIA LLC)")
+
+contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  count(prime_awardee_parent_name) %>% 
+  arrange(desc(n))
+
+contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  count(prime_award_naics_description) %>% 
+  arrange(desc(n))
+
+contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  summarise(sum(prime_award_amount))
+
+contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  count(prime_award_awarding_sub_agency_name) %>% 
+  arrange(desc(n))
+```
+ 
+```{r}
+contractprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>% 
+  count(recipient_name) %>% 
+  arrange(desc(n))
+
+contractprimeawards %>% filter(period_of_performance_current_end_date >= '2025-01-01') %>% 
+  count(product_or_service_code_description) %>% 
+  arrange(desc(n))
+
+contractprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>%
+  count(funding_agency_name) %>% 
+  arrange(desc(n))
+
+```
+ 
+```{r}
+assistanceprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>% 
+  count(cfda_numbers_and_titles) %>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>% 
+  count(recipient_name) %>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>% 
+  count(awarding_agency_name) %>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>% count(awarding_agency_name) %>% 
+  arrange(desc(n))
+
+assistanceprimeawards %>% filter(awarding_agency_name == "Department of Veterans Affairs")
+```
+
+What specifc grants do places in Hollister get?
+```{r}
+assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  filter(subawardee_name == "COUNTY OF SAN BENITO"|subawardee_name == "SAN BENITO, COUNTY OF")
+
+assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  filter(subawardee_name == "HOLLISTER SCHOOL DISTRICT")
+
+assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  filter(subawardee_name == "SAN BENITO HIGH SCHOOL DISTRICT")
+
+assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  filter(subawardee_name == "AROMAS-SAN JUAN UNIF SCH DIST")
+
+assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  filter(subawardee_name == "HOLLISTER, CITY OF")
+
+assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>% 
+  filter(subawardee_name == "SAN BENITO COUNTY LOCAL TRANSPORTATION AUTHORITY")
+
+assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>% 
+  filter(prime_award_awarding_agency_name == "Department of Transportation (DOT)")
+
+
+```
+
+plot when the current ending of these funds are 
+```{r}
+ongoingasssub <- assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01')
+
+ongoingasssub %>%  count(prime_award_period_of_performance_current_end_date) %>% 
+  arrange(desc(n))
+
+ongoingconsub <- contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01')
+
+ongoingassprime <- assistanceprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01')
+
+ongoingconprime <- contractprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01')
+
+
+ongoingasssub %>% ggplot(aes(x=prime_award_period_of_performance_current_end_date)) +
+  geom_histogram()
+
+ongoingconsub %>% ggplot(aes(x=prime_award_period_of_performance_current_end_date)) +
+  geom_histogram()
+
+ongoingassprime %>% ggplot(aes(x=period_of_performance_current_end_date)) +
+  geom_histogram()
+
+ongoingconprime %>% ggplot(aes(x=period_of_performance_current_end_date)) +
+  geom_histogram()
+```
+
+what kinds of funds are ending on september 30 2025?
+
+```{r}
+ongoingasssub %>% filter(prime_award_period_of_performance_current_end_date == "2025-09-30")
+
+ongoingasssub %>% filter(prime_award_period_of_performance_current_end_date == "2025-09-30") %>% 
+  count(prime_award_base_transaction_description) %>% 
+  arrange(desc(n))
+
+ongoingasssub %>% filter(prime_award_period_of_performance_current_end_date == "2025-06-30")
+
+ongoingasssub %>%  count(prime_award_base_transaction_description) %>% 
+  arrange(desc(n))
+```
+
+most of the assistance subawards ending in june are vaccine funds for kids, most of the awards in august that are lapsing are education/child services-related
+
+what infrastructure and development grants and contracts are ongoing in the county?
+
+```{r}
+ conprimeinfra <- contractprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>%  
+  filter(product_or_service_code_description == "ARCHITECT AND ENGINEERING- GENERAL: OTHER"|product_or_service_code_description == "ARCHITECT AND ENGINEERING- CONSTRUCTION: OTHER WAREHOUSE BUILDINGS"| product_or_service_code_description == "CONSTRUCTION OF OFFICE BUILDINGS"| product_or_service_code_description == "ENVIRONMENTAL SYSTEMS PROTECTION- ENVIRONMENTAL REMEDIATION"| product_or_service_code_description == "LEASE OR RENTAL OF EQUIPMENT- GROUND EFFECT VEHICLES, MOTOR VEHICLES, TRAILERS, AND CYCLES"| product_or_service_code_description == "SPECIAL STUDIES/ANALYSIS- GRAZING/RANGE"| product_or_service_code_description == "SUPPORT- PROFESSIONAL: ENGINEERING/TECHNICAL")
+
+assprimeinfra <- assistanceprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>%  
+  filter(cfda_numbers_and_titles == "10.912: ENVIRONMENTAL QUALITY INCENTIVES PROGRAM"|cfda_numbers_and_titles == "10.427: RURAL RENTAL ASSISTANCE PAYMENTS"| cfda_numbers_and_titles == "10.924: CONSERVATION STEWARDSHIP PROGRAM"| cfda_numbers_and_titles == "10.924: CONSERVATION STEWARDSHIP PROGRAM"| cfda_numbers_and_titles == "10.868: RURAL ENERGY FOR AMERICA PROGRAM"| cfda_numbers_and_titles == "15.507: WATERSMART (SUSTAIN AND MANAGE AMERICA’S RESOURCES FOR TOMORROW)"| cfda_numbers_and_titles == "20.939: SAFE STREETS AND ROADS FOR ALL"| cfda_numbers_and_titles == "93.526: GRANTS FOR CAPITAL DEVELOPMENT IN HEALTH CENTERS; 93.526: FIP VERIFICATION")
+
+consubinfra <- contractsubawards %>%  filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%  
+  filter(prime_award_naics_description == "RESEARCH AND DEVELOPMENT IN THE PHYSICAL, ENGINEERING, AND LIFE SCIENCES (EXCEPT NANOTECHNOLOGY AND BIOTECHNOLOGY)"|prime_award_naics_description == "RESEARCH AND DEVELOPMENT IN THE PHYSICAL, ENGINEERING, AND LIFE SCIENCES (EXCEPT BIOTECHNOLOGY)"| prime_award_naics_description == "PROCESS, PHYSICAL DISTRIBUTION, AND LOGISTICS CONSULTING SERVICES"| prime_award_naics_description == "ALL OTHER MISCELLANEOUS GENERAL PURPOSE MACHINERY MANUFACTURING"| prime_award_naics_description == "ENGINEERING SERVICES")
+
+asssubinfra <- assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  filter(prime_award_cfda_numbers_and_titles == "20.509: FORMULA GRANTS FOR RURAL AREAS AND TRIBAL TRANSIT PROGRAM"| prime_award_cfda_numbers_and_titles == "10.215: SUSTAINABLE AGRICULTURE RESEARCH AND EDUCATION"| prime_award_cfda_numbers_and_titles == "93.568: LOW-INCOME HOME ENERGY ASSISTANCE"|  prime_award_cfda_numbers_and_titles == "11.473: OFFICE FOR COASTAL MANAGEMENT"| prime_award_cfda_numbers_and_titles == "15.615: COOPERATIVE ENDANGERED SPECIES CONSERVATION FUND"| prime_award_cfda_numbers_and_titles == "20.513: ENHANCED MOBILITY OF SENIORS AND INDIVIDUALS WITH DISABILITIES"| prime_award_cfda_numbers_and_titles == "20.600: STATE AND COMMUNITY HIGHWAY SAFETY")
+  
+```
+
+ira stuff
+
+```{r}
+iraiija <- assistanceprimeawards %>% filter(grepl("IRA|INFLATION", program_activities_funding_this_award)|(grepl("INFLATION", prime_award_base_transaction_description))| (grepl("INFRASTRUCTURE LAW", program_activities_funding_this_award)))
+
+assistanceprimeawards %>% filter(period_of_performance_current_end_date >= '2025-01-01') %>% 
+  filter(grepl("IRA|INFLATION", program_activities_funding_this_award)|(grepl("INFLATION", prime_award_base_transaction_description))| (grepl("INFRASTRUCTURE LAW", program_activities_funding_this_award)))
+
+```
+
+```{r}
+assistanceprimeawards %>% filter(grepl("INFRASTRUCTURE LAW", program_activities_funding_this_award))
+
+assistancesubawards %>% filter(grepl("IRA", prime_award_base_transaction_description))
+```
+
+```{r}
+ongoingassprime %>% filter(period_of_performance_current_end_date == "2025-09-30")
+
+ongoingasssub %>% filter(prime_award_period_of_performance_current_end_date == "2025-09-30") %>% 
+  count(prime_award_base_transaction_description) %>% 
+  arrange(desc(n))
+
+ongoingassprime %>% count(period_of_performance_current_end_date) %>% 
+  arrange(desc(n))
+
+ongoingasssub %>%  count(prime_award_base_transaction_description) %>% 
+  arrange(desc(n))
+
+ongoingasssub %>%  filter(prime_award_base_transaction_description == "Title I Part A Basic Grants to LEAs")
+```
+
+```{r}
+
+subawardsschools <- assistancesubawards %>% filter(prime_award_period_of_performance_current_end_date >= '2025-01-01') %>%
+  filter(subawardee_name == "HOLLISTER SCHOOL DISTRICT"| subawardee_name == "SAN BENITO HIGH SCHOOL DISTRICT"| subawardee_name == "AROMAS-SAN JUAN UNIF SCH DIST"| subawardee_name == "NORTH COUNTY JOINT UNION SCHOOL DISTRICT"| subawardee_name == "SAN BENITO COUNTY OFFICE OF EDUCATION")
+
+primeawardsschools <- assistanceprimeawards %>%  filter(period_of_performance_current_end_date >= '2025-01-01') %>% 
+  filter(recipient_name == "CIENEGA UNION ELEMENTARY SCHOOL DISTRICT"| recipient_name == "JEFFERSON ELEMENTARY SCHOOL DISTRICT"| recipient_name == "PANOCHE ELEMENTARY SCHOOL DISTRICT"| recipient_name == "SOUTHSIDE ELEMENTARY SCHOOL DISTRICT"| recipient_name == "TRES PINOS UNION ELEMENTARY SCHOOL"| recipient_name == "WILLOW GROVE UNIFIED SCHOOL DISTRICT")
+
+
+```
+
+
+```{r}
+subawardsschools %>% 
+  count(prime_award_cfda_numbers_and_titles) %>% 
+  arrange(desc(n))
+
+subawardsschools %>% filter(prime_award_cfda_numbers_and_titles == "84.010: TITLE I GRANTS TO LOCAL EDUCATIONAL AGENCIES")
+
+subawardsschools %>% filter(prime_award_cfda_numbers_and_titles == "84.367: SUPPORTING EFFECTIVE INSTRUCTION STATE GRANTS (FORMERLY IMPROVING TEACHER QUALITY STATE GRANTS)")
+
+subawardsschools %>% filter(prime_award_cfda_numbers_and_titles == "84.365: ENGLISH LANGUAGE ACQUISITION STATE GRANTS")
+
+subawardsschools %>% filter(prime_award_cfda_numbers_and_titles == "84.424: STUDENT SUPPORT AND ACADEMIC ENRICHMENT PROGRAM")
+
+subawardsschools %>% filter(prime_award_cfda_numbers_and_titles == "10.555: NATIONAL SCHOOL LUNCH PROGRAM")
+
+subawardsschools %>% filter(prime_award_cfda_numbers_and_titles == "10.558: CHILD AND ADULT CARE FOOD PROGRAM")
+
+subawardsschools %>% filter(prime_award_cfda_numbers_and_titles == "84.048: CAREER AND TECHNICAL EDUCATION -- BASIC GRANTS TO STATES")
+
+
+```
+
+```{r}
+subawardsschools %>% 
+  group_by(subawardee_name) %>% 
+  summarise(sum(subaward_amount)) 
+
+primeawardsschools %>% group_by(recipient_name) %>% 
+  arrange(desc(total_obligated_amount))
+```
+
+```{r}
+sanbenitohigh <- assistancesubawards %>% filter(subawardee_name == "SAN BENITO HIGH SCHOOL DISTRICT")
+
+aromasschd <- assistancesubawards %>% filter(subawardee_name == "AROMAS-SAN JUAN UNIF SCH DIST")
+
+northcountysd <- assistancesubawards %>%  filter(subawardee_name == "NORTH COUNTY JOINT UNION SCHOOL DISTRICT")
+
+hollistersd <- assistancesubawards %>%  filter(subawardee_name == "HOLLISTER SCHOOL DISTRICT")
+
+sbcofficeed <- assistancesubawards %>%  filter(subawardee_name == "SAN BENITO COUNTY OFFICE OF EDUCATION")
+
+cienegasd <- assistanceprimeawards %>% filter(recipient_name == "CIENEGA UNION ELEMENTARY SCHOOL DISTRICT")
+
+jeffersonsd <- assistanceprimeawards %>% filter(recipient_name == "JEFFERSON ELEMENTARY SCHOOL DISTRICT")
+
+jeffersonsd <- assistanceprimeawards %>% filter(recipient_name == "JEFFERSON ELEMENTARY SCHOOL DISTRICT")
+```
+
+```{r}
+subawardsschools %>% filter(subawardee_name == "HOLLISTER SCHOOL DISTRICT")
+
+subawardsschools %>% filter(subawardee_name == "AROMAS-SAN JUAN UNIF SCH DIST")
+
+assistancesubawards %>%  filter(subawardee_name== "SAN BENITO COUNTY OFFICE OF EDUCATION")
+
+```
+

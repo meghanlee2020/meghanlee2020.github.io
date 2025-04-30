@@ -1,0 +1,158 @@
+---
+title: "sbcruralschools"
+output: html_document
+date: "2025-04-07"
+---
+
+install packages:
+
+```{r}
+### This code will install the packages required for this project if you don't already have them installed.
+packages <- c("sf", "tidyverse", "leaflet", "mapview", "janitor", "lubridate", "tidycensus")
+
+for (pkg in packages) {
+  if (!require(pkg, character.only = TRUE)) {
+    install.packages(pkg)
+  }
+}
+
+### Import our packages into our script here.
+library(sf)
+library(tidyverse)
+library(janitor)
+library(leaflet)
+library(mapview)
+library(raster)
+library(lubridate)
+library(tidycensus)
+
+install.packages("webshot2")
+
+library(webshot2)
+
+```
+
+load data:
+```{r}
+schools <- sbcschooldistrictfunding
+```
+
+attempt 
+```{r}
+elementary_schools <- st_read("data/Elementary_School_Districts.geojson")
+
+supervisor_districts <- st_read("data/Supervisorial_Boundaries.geojson")
+
+mapview(schools, xcol = "Longitude", ycol = "Latitude", crs = 4269, grid = FALSE)
+```
+
+look at elementary school parcels:
+
+```{r}
+mapview(elementary_schools) + mapview(schools, xcol = "Longitude", ycol = "Latitude", crs = 4269, grid = FALSE)
+```
+
+making reap and title I dataframes
+```{r}
+REAP <- schools %>% filter(primaryfedfunding == "REAP")
+
+TitleI <- schools %>% filter(primaryfedfunding == "Title I")
+
+None <- schools %>%  filter(primaryfedfunding == "None")
+```
+
+
+transform schools into spatial objects
+
+```{r}
+### Transform shootings into a spatial object
+REAP_spatial <- REAP %>%
+  ### filter out any NA values for longitude and latitude 
+  filter(!is.na(Longitude) |
+         !is.na(Latitude)
+         ) %>%
+  ### use the st_as_sf function to define the spatial aspects of our data set
+  st_as_sf(
+    coords = c("Longitude", "Latitude"),
+    crs = 4326 
+  ) 
+
+### Transform victims into a spatial object
+TitleI_spatial <- TitleI %>%
+  ### filter out any NA values for longitude and latitude 
+  filter(!is.na(Longitude) |
+         !is.na(Latitude)
+         ) %>%
+  st_as_sf(
+    coords = c("Longitude", "Latitude"),
+    crs = 4326 
+  )
+
+### Transform victims into a spatial object
+None_spatial <- None %>%
+  ### filter out any NA values for longitude and latitude 
+  filter(!is.na(Longitude) |
+         !is.na(Latitude)
+         ) %>%
+  st_as_sf(
+    coords = c("Longitude", "Latitude"),
+    crs = 4326 
+  )
+```
+
+try to transform supervisorial district data:
+
+```{r}
+supervisorial_df <- as.data.frame(supervisor_districts)
+
+supervisorial_df <- transform(supervisorial_df, populationdensity = POPULATION / AREA)
+
+
+supervisor_districts <- transform(supervisor_districts, populationdensity = POPULATION / AREA)
+```
+
+
+```{r}
+reds = colorRampPalette(c('pink', 'dark red'))
+mapview(supervisor_districts, zcol="populationdensity", col.regions = reds, at=seq(0, 500, 100)) + mapview(REAP_spatial, 
+        #changing the size of the markers
+        cex = 3, 
+        #changing the color of the markers
+        col.regions="green") + mapview(TitleI_spatial, 
+        #changing the size of the markers
+        cex = 3, 
+        #changing the color of the markers
+        col.regions="blue") 
+```
+
+
+attempting to show popdensity in supervisorial districts
+
+```{r}
+  
+sbcschools <- mapview(supervisor_districts, zcol="populationdensity", col.regions = reds, at=c(0, 100, 200, 300, 400, Inf), layer.name = c("Population&nbsp;per&nbsp;sq.&nbsp;mile")) + mapview(REAP_spatial, 
+        #changing the size of the markers
+        cex = 3, 
+        #changing the color of the markers
+        col.regions="blue", layer.name = c("REAP&nbsp;schools")) + mapview(TitleI_spatial, 
+        #changing the size of the markers
+        cex = 3, 
+        #changing the color of the markers
+        col.regions="yellow", layer.name = c("Title&nbsp;I&nbsp;schools"))  + mapview(None_spatial, 
+        #changing the size of the markers
+        cex = 3, 
+        #changing the color of the markers
+        col.regions="green", layer.name = c("No&nbsp;current&nbsp;federal&nbsp;funding")) 
+
+```
+
+
+
+```{r}
+sbcschools
+```
+
+```{r}
+mapshot(sbcschools, url = "sbcschools.html")
+```
+

@@ -1,0 +1,136 @@
+---
+title: "School District Comparisons"
+output: html_notebook
+---
+Load packages:
+```{r}
+library(tidyverse)
+library(tidycensus)
+library(ggplot2)
+library(lubridate)
+library(dplyr)
+library(sf)
+library(plotly)
+library(data.table)
+```
+load data:
+
+```{r}
+schooldistrictdata <- read.csv("data/districtdata.csv")
+```
+
+comparing hispanic percentage against percent of studnets w/ frm + status of meetings
+```{r}
+ggplot(schooldistrictdata, aes(x=percentfrm, y=hisperc, color=meetingstatus)) +
+  geom_point()
+
+ggplot(schooldistrictdata, aes(x=percentfrm, y=medanincome, color=meetingstatus)) +
+  geom_point()
+
+ggplot(schooldistrictdata, aes(x=percentfrm, y=numberhomeless, color=meetingstatus)) +
+  geom_point()
+```
+meeting status + region
+
+```{r}
+ggplot(schooldistrictdata, aes(x=meetingstatus, y=region, color=meetingstatus)) +
+geom_count()
+```
+```{r}
+schooldistrictdata %>% 
+  count(region) %>% 
+  arrange(desc(n))
+
+schooldistrictdata %>%  
+  filter(meetingstatus=="no public online video") %>% 
+  count(region) %>% 
+  arrange(desc(n))
+
+schooldistrictdata %>%  
+  filter(meetingstatus=="video posted") %>% 
+  count(region) %>% 
+  arrange(desc(n))
+
+schooldistrictdata %>%  
+  filter(meetingstatus=="no public online video") %>% 
+  count(countyname) %>% 
+  arrange(desc(n))
+
+schooldistrictdata %>%  
+  filter(meetingstatus=="video posted") %>% 
+  count(countyname) %>% 
+  arrange(desc(n))
+
+schooldistrictdata %>% 
+  count(meetingstatus) %>% 
+  arrange(desc(n))
+  
+```
+comparing hispanic and 
+```{r}
+ggplot(schooldistrictdata, aes(x=percentfrm, y=whiteperc, color=meetingstatus)) +
+  geom_point()
+```
+
+```{r}
+ggplot(schooldistrictdata, aes(x=medanincome, y=populationdensity, color=meetingstatus)) +
+  geom_point()
+```
+
+```{r}
+ggplot(schooldistrictdata, aes(x=percentfrm, y=percentfederalfunding, color=meetingstatus)) +
+  geom_point()
+
+ggplot(schooldistrictdata, aes(x=percentfrm, y=percentlocalfunding, color=meetingstatus)) +
+  geom_point()
+
+ggplot(schooldistrictdata, aes(x=percentfrm, y=percentstatefunding, color=meetingstatus)) +
+  geom_point()
+
+ggplot(schooldistrictdata, aes(x=percentfrm, y=Census.Day.Enrollment..District., color=meetingstatus)) +
+  geom_point()
+```
+
+```{r}
+ggplot(schooldistrictdata, aes(x=asian, y=percentfrm, color=meetingstatus)) +
+  geom_point()
+```
+```{r}
+ggplot(schooldistrictdata, aes(x=agrank2022, y=hispanic, color=meetingstatus)) +
+  geom_point()
+```
+
+```{r}
+ggplot(schooldistrictdata, aes(x=agrank2022, y=meetingstatus, color=meetingstatus)) +
+geom_count()
+```
+
+```{r}
+ggplot(schooldistrictdata, aes(x=agrank2022, y=white, color=meetingstatus)) +
+  geom_point()
+```
+
+```{r}
+schooldistrictdata %>% 
+  filter(meetingstatus=="no public online video") %>% 
+  arrange(desc(percentfrm))
+
+schooldistrictdata %>% 
+  filter(meetingstatus=="video posted") %>% 
+  arrange(percentfrm)
+```
+
+```{r}
+ggplot(schooldistrictdata, aes(x=percentlocalfunding, y=Hispanic.or.Latino....District., color=status.of.meetings)) +
+  geom_point()
+```
+
+```{r}
+ggplot(schooldistrictdata, aes(x=medanincome, y=percentlocalfunding, color=meetingstatus)) +
+  geom_point()
+```
+
+```{r}
+
+```
+

@@ -3,7 +3,7 @@ navbar:
   title: "Meghan Lee"
 left:
   - text: "Home"
-href: index.html
-output:
+href: "tufte.css"
+  output:
   html_document:
-  remote_theme: pages-themes/minimal@v0.2.0
+  theme: 
