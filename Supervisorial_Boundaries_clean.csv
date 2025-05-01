@@ -1,0 +1,6 @@
+﻿FID,ID,AREA,DISTRICT,NAME,POPULATION,IDEAL_VALU,DEVIATION,Supervisor,Email,DIST_ID,DIST_NAME,SHAPE_Leng,DX_DEV,SUP_NAME,Shape__Are,Shape__Len,Shape__Area,Shape__Length
+1,2,81.7,1,District 1,12521,12867,-346,Betsy Dirks,supervisordirks@cosb.us,1,1,0,-346,Betsy Dirks,458522903.3,133169.833,2278353957,215840.3123
+2,3,75.36,2,District 2,13248,12867,381,Kollin Kosmicki,supervisorkosmicki@cosb.us,2,2,0.926287,381,Kollin Kosmicki,362907727.4,116360.5762,2100580927,242482.0734
+3,9,1197.8,4,District 4,12881,12867,14,Bob Tiffany,supervisortiffany@cosb.us,4,4,0,14,Bob Tiffany,4754152531,428020.341,33398577735,1119765.332
+4,17,2.66,3,District 3,13029,12867,162,Peter D. Hernandez,supervisorhernandez@cosb.us,3,3,0.12231921,162,Peter D. Hernandez,7089479.344,14707.43758,74083978.93,40370.82519
+5,21,32.54,5,District 5,12658,12867,-209,Bea Gonzales,supervisorgonzales@cosb.us,5,5,0.18307328,-209,Bea Gonzales,21789374.14,22736.80466,908256377.3,177220.6865
